@@ -1,7 +1,7 @@
 from io import BytesIO
 import uuid
 from pathlib import Path
-
+from django.http import JsonResponse
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 from azure.storage.blob import BlobClient
@@ -43,11 +43,6 @@ def download_blob(file):
     return blob_content
     
 
-# def save_file_url_to_db(file_url):
-#     new_file = models.File.objects.create(file_url=file_url)
-#     new_file.save()
-#     return new_file
-
 def upload_file_to_blob(file):
 
     if not check_file_ext(file.name):
@@ -62,4 +57,6 @@ def upload_file_to_blob(file):
     blob_client.upload_blob(data=file_io)
     # file_object = save_file_url_to_db(blob_client.url)
 
-    return True
+    JsonResponse({
+            'messague': 'file is uploaded'
+        })
