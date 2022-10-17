@@ -7,7 +7,6 @@ from azure.keyvault.secrets import SecretClient
 from azure.storage.blob import BlobClient
 from django.conf import settings
 
-from . import models
 
 
 ALLOWED_EXTENTIONS = ['.csv']
@@ -54,8 +53,7 @@ def upload_file_to_blob(file):
     file_content = file.read()
     file_io = BytesIO(file_content)
     blob_client = create_blob_client(file_name=file_name)
-    blob_client.upload_blob(data=file_io)
-    # file_object = save_file_url_to_db(blob_client.url)
+    blob_client.upload_blob(data=file_io)    
 
     JsonResponse({
             'messague': 'file is uploaded'
