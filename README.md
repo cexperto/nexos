@@ -3,6 +3,7 @@
 
 project challenge for nexos
 
+clone this repo, config a postgresql database and reemplace credentials in settings.py file
 
 option:
 For do more easy process execute:
