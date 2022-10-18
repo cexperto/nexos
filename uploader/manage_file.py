@@ -5,6 +5,7 @@ from cliente.models import Cliente
 from producto.models import Producto
 from sucursal.models import Sucursal
 from sqlalchemy import create_engine
+from sqlalchemy import exc
 from inventario.models import Inventario
 
 
@@ -46,14 +47,16 @@ def manage_file_pd(file):
         inventario = pd.concat([FechaInventario, Inventario_Final, GLN_Sucursal], axis=1, join="inner")
         rename_inventario = inventario.rename(columns={'GLN_Sucursal': 'GLN_sucursal_id'})
         insert_inventario = rename_inventario.to_sql(Inventario._meta.db_table, if_exists='append', con=engine, index=False)
-        print('*'*100)
-        print(type(insert_inventario))
         if not insert_inventario:
             report_failed_insert('inventario')
 
-            return JsonResponse({
-                    'ok': 'file is saved'
-                })
+        return JsonResponse({
+                'ok': 'file is saved'
+            })
+    except exc.IntegrityError:
+        return JsonResponse({
+                'error': 'client already added'
+            })
     except Exception:
         return JsonResponse({
                 'error': 'some error'

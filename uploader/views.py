@@ -1,13 +1,16 @@
-from turtle import pd
-from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+"""
+for save file in blog storage uncomment line 13 and 42, but make sure have credentials
+follow this video for have credentials if is the case https://www.youtube.com/watch?v=PjOjrIZOetM
+"""
+
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from django.http import HttpResponse, JsonResponse
 import logging
 
+from cliente.models import Cliente
 from .manage_file import manage_file_pd
-from .file_azure import upload_file_to_blob
+# from .file_azure import upload_file_to_blob
 
 
 ALLOWED_EXTENTIONS = ['text/csv']
@@ -35,5 +38,16 @@ def upload_file(request):
         return JsonResponse({
             'error': 'file is not csv'
         })
-    upload_file_to_blob(file)
+    logging.info('data is saved in postgresDB')
+    # upload_file_to_blob(file)
+    # logging.info('data is saved in blob')    
     return manage_file_pd(file)
+
+
+@csrf_exempt
+def query_client(request):
+    try:
+        query_client=Cliente.objects.select_related('GLN_Cliente','producto').values_list('GLN_Cliente','producto')    
+        return JsonResponse({'data': list(query_client)})
+    except Exception:
+        return JsonResponse({'error': 'no data found'})

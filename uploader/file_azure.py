@@ -8,7 +8,6 @@ from azure.storage.blob import BlobClient
 from django.conf import settings
 
 
-
 ALLOWED_EXTENTIONS = ['.csv']
 
 def create_blob_client(file_name):
